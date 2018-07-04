@@ -52,28 +52,28 @@ sbt frontend:assembly # frontend
 
 - Deploy, but do not start, the sample Akka backend app: with `-d apps.internal` and `--health-check-type none` options, since the backend app doesn't expose any HTTP ports:
 ```
-cf push --no-start --health-check-type none akka-backend -p target/scala-2.11/akka-sample-backend.jar -b java_buildpack_offline -d apps.internal
+cf push --no-start --health-check-type none gt-akka-backend -p target/scala-2.11/akka-sample-backend.jar -b java_buildpack_offline -d apps.internal
 ```
 - Map an internal route to the backend application:
 ```
-cf map-route akka-backend apps.internal --hostname akka-backend
+cf map-route gt-akka-backend apps.internal --hostname gt-akka-backend
 ```
 - Add this network policy, to allow the backend nodes to communicate:
 ```
-cf add-network-policy akka-backend --destination-app akka-backend --port 2551 --protocol tcp
+cf add-network-policy gt-akka-backend --destination-app gt-akka-backend --port 2551 --protocol tcp
 ```
 - Start the backend app:
 ```
-cf start akka-backend
+cf start gt-akka-backend
 ```
 - Check the log to see that first node joined itself:
 ```
-cf logs akka-backend
+cf logs gt-akka-backend
 ```
 - **IMPORTANT:** To prevent cluster split, verify that the first node is running before scaling it.
 - Scale backend to 2 instances:
 ```
-cf scale akka-backend -i 2
+cf scale gt-akka-backend -i 2
 ```
 
 ## Deploying Akka frontend application
@@ -84,7 +84,7 @@ cf push akka-frontend --no-start -p target/scala-2.11/akka-sample-frontend.jar -
 ```
 - Add this network policy to allow the frontend app to communicate with the backend app via TCP on port 2551:
 ```
-cf add-network-policy akka-frontend --destination-app akka-backend --port 2551 --protocol tcp
+cf add-network-policy akka-frontend --destination-app gt-akka-backend --port 2551 --protocol tcp
 ```
 - Start the fronted app:
 ```
@@ -92,7 +92,7 @@ cf start akka-frontend
 ```
 - In separate windows or terminal sessions, check logs from both frontend and backend to ensure all client/server and server-to-server communications are working fine:
 ```
-cf logs akka-backend
+cf logs gt-akka-backend
 cf logs akka-frontend
 ```
 - Verify that it works:
