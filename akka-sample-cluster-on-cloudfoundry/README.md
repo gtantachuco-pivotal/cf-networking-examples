@@ -80,24 +80,24 @@ cf scale gt-akka-backend -i 2
 
 - Deploy, but don't start yet, the sample Akka frontend:
 ```
-cf push akka-frontend --no-start -p target/scala-2.11/akka-sample-frontend.jar -b  java_buildpack_offline
+cf push gt-akka-frontend --no-start -p target/scala-2.11/akka-sample-frontend.jar -b  java_buildpack_offline
 ```
 - Add this network policy to allow the frontend app to communicate with the backend app via TCP on port 2551:
 ```
-cf add-network-policy akka-frontend --destination-app gt-akka-backend --port 2551 --protocol tcp
+cf add-network-policy gt-akka-frontend --destination-app gt-akka-backend --port 2551 --protocol tcp
 ```
 - Start the fronted app:
 ```
-cf start akka-frontend
+cf start gt-akka-frontend
 ```
 - In separate windows or terminal sessions, check logs from both frontend and backend to ensure all client/server and server-to-server communications are working fine:
 ```
 cf logs gt-akka-backend
-cf logs akka-frontend
+cf logs gt-akka-frontend
 ```
 - Verify that it works:
 ```
-curl akka-frontend.<YOUR_CF_DOMAIN>/info
+curl gt-akka-frontend.<YOUR_CF_DOMAIN>/info
 ```
 - If all is working, it should show the number of completed jobs
 
